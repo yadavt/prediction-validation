@@ -4,6 +4,8 @@
 
 #!/usr/bin/python
 
+#!/usr/bin/python
+
 import csv
 import operator
 
@@ -14,6 +16,18 @@ def error(actualList,predictedList):
       if (x1[0]==x2[0] and x1[1]==x2[1]):
         errors.append((x1[0],round(abs(float(x1[2])-float(x2[2])),2)))
   return errors
+
+def writefile(my_sums,window,start):
+  count=0
+  total=0
+  length=0
+  #print(my_sums)
+  while count<int(window):
+    total +=my_sums[start+count-1][1]
+    length +=my_sums[start+count-1][2]
+    count += 1
+  
+  print(round((total/length),2))
 
 def test():
   actualFile=open("actual.txt","r")
@@ -45,9 +59,8 @@ def test():
 
   my_sums = sorted([(i,sum(x[1] for x in errors if x[0] == i),my_list.count(i)) for i in my_set])
 
-
-  while start<=numLoops:
-    
+  while start<=numLoops: 
+    writefile(my_sums,window,start)
     start += 1
 
 test()
