@@ -6,8 +6,9 @@
 
 #!/usr/bin/python
 
+#!/usr/bin/python
+
 import csv
-import operator
 
 def error(actualList,predictedList):
   errors=[]
@@ -21,27 +22,37 @@ def writefile(my_sums,window,start):
   count=0
   total=0
   length=0
+  final=[]
   #print(my_sums)
   while count<int(window):
     total +=my_sums[start+count-1][1]
     length +=my_sums[start+count-1][2]
     count += 1
-  
-  print(round((total/length),2))
+
+  final.append((start,(start+count-1),round((total/length),2)))
+
+  with open('./output/comparison.txt','a') as f:
+    writer = csv.writer(f, delimiter ='|')
+    writer.writerows(final)
+
+  print(str(start)+"|"+str(int(start+count-1))+"|"+str(round((total/length),2)))
 
 def test():
-  actualFile=open("actual.txt","r")
+
+  comparisonFile=open("./output/comparison.txt","w")
+
+  actualFile=open("./input/actual.txt","r")
   actualReader=csv.reader(actualFile,delimiter="|")
   actualList=[tuple(l) for l in list(actualReader)]
   actualFile.close()
 
 
-  predictedFile=open("predicted.txt","r")
+  predictedFile=open("./input/predicted.txt","r")
   predictedReader=csv.reader(predictedFile,delimiter="|")
   predictedList=[tuple(l) for l in list(predictedReader)]
   predictedFile.close()
 
-  windowFile=open("window.txt","r")
+  windowFile=open("./input/window.txt","r")
   window=windowFile.read()
   windowFile.close()
   
@@ -62,5 +73,7 @@ def test():
   while start<=numLoops: 
     writefile(my_sums,window,start)
     start += 1
+  
+  comparisonFile.close()
 
 test()
